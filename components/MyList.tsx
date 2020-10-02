@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MyIcon } from './MyIcon';
+
 interface MyListProps {
   onClick: (select: number) => void;
   selectedItem: number;
@@ -12,8 +13,6 @@ const ListName: Array<string> = [
   'phone-in-talk',
   'save',
 ];
-const selectedColor = 'red';
-const disSelectedColor = '#bfbfbf';
 
 export const MyList: React.FunctionComponent<MyListProps> = ({
   selectedItem = 0,
@@ -23,35 +22,35 @@ export const MyList: React.FunctionComponent<MyListProps> = ({
     <>
       <MyIcon
         name={ListName[0]}
-        color={selectedItem == 0 ? selectedColor : disSelectedColor}
+        selected={selectedItem == 0}
         onPress={() => {
           onClick(0);
         }}
       />
       <MyIcon
         name={ListName[1]}
-        color={selectedItem == 1 ? selectedColor : disSelectedColor}
+        selected={selectedItem == 1}
         onPress={() => {
           onClick(1);
         }}
       />
       <MyIcon
         name={ListName[2]}
-        color={selectedItem == 2 ? selectedColor : disSelectedColor}
+        selected={selectedItem == 2}
         onPress={() => {
           onClick(2);
         }}
       />
       <MyIcon
         name={ListName[3]}
-        color={selectedItem == 3 ? selectedColor : disSelectedColor}
+        selected={selectedItem == 3}
         onPress={() => {
           onClick(3);
         }}
       />
       <MyIcon
         name={ListName[4]}
-        color={selectedItem == 4 ? selectedColor : disSelectedColor}
+        selected={selectedItem == 4}
         onPress={() => {
           onClick(4);
         }}

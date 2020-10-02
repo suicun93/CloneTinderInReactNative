@@ -1,24 +1,42 @@
 import * as React from 'react';
+import { View } from 'react-native';
 import { Icon } from 'react-native-elements';
+
 interface MyIconProps {
   name?: string;
   onPress?: () => void;
-  color?: string;
+  selected: boolean;
 }
+
+const selectedColor = 'red';
+const disSelectedColor = '#bfbfbf';
 
 export const MyIcon: React.FunctionComponent<MyIconProps> = ({
   name = 'event',
   onPress,
-  color = '#bfbfbf',
+  selected = false,
 }) => {
   return (
-    <Icon
-      name={name}
-      type="material"
-      color={color}
-      containerStyle={{ padding: 10 }}
-      size={30}
-      onPress={onPress}
-    />
+    <View
+      style={{
+        marginHorizontal: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <View
+        style={{
+          backgroundColor: selected ? selectedColor : disSelectedColor,
+          height: 3,
+          width: '60%',
+        }}></View>
+      <Icon
+        name={name}
+        type="material"
+        color={selected ? selectedColor : disSelectedColor}
+        containerStyle={{ padding: 10 }}
+        size={30}
+        onPress={onPress}
+      />
+    </View>
   );
 };

@@ -6,30 +6,28 @@ import {
   StatusBar,
   SafeAreaView,
   Image,
-  AsyncStorage,
 } from 'react-native';
-import avatar from './assets/avatar.png';
 import { Icon } from 'react-native-elements';
 import GestureRecognizer from 'react-native-swipe-gestures';
+
+// Models
 import UserModelClass from './models/UserClass';
-import { User } from './models/UserModel';
 import { MyData } from './models/MyData';
-import { defaultUri, appName } from './components/constants';
+
+// Components
 import { MyList } from './components/MyList';
 import FloatingHearts from './components/FloatingHeart';
+import { storeData } from './common/Storage';
+import { callApi } from './common/Network';
+import avatar from './assets/avatar.png';
+import { appName } from './constants';
 
 // Main App
 const App = () => {
   const [user, setUser] = useState();
   const [selectedItem, setSelectedItem] = useState(0);
-  const [count, setCount] = useState(0);
-
-  const keyDB = 'com.duc.tinder';
+  const [countHeart, setCountHeart] = useState(0);
   const avatarImageUri = Image.resolveAssetSource(avatar).uri;
-  const config = {
-    velocityThreshold: 0.2,
-    directionalOffsetThreshold: 50,
-  };
 
   const listData: MyData[] = [
     {
@@ -62,45 +60,7 @@ const App = () => {
       title: 'My cell is',
       data: !user ? 'Unknown' : user.results[0].user.cell,
     },
-  ];
-
-  const _callApi = async () => {
-    console.log('right');
-    setUser(undefined);
-    setSelectedItem(0);
-    postData('https://randomuser.me/api/0.4/?randomapi')
-      .then((user) => {
-        const userModel = new UserModelClass();
-        Object.assign(userModel, user);
-        setUser(userModel);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const _storeData = async () => {
-    console.log('left');
-    if (!user) {
-      return;
-    }
-    try {
-      let dbTemp = await AsyncStorage.getItem(keyDB);
-      let oldArray: User[];
-      if (dbTemp) {
-        oldArray = JSON.parse(dbTemp);
-        oldArray = oldArray.concat(user);
-      } else {
-        oldArray = new Array<User>();
-        oldArray = oldArray.concat(user);
-      }
-      await AsyncStorage.setItem(keyDB, JSON.stringify(oldArray));
-      console.log(oldArray.length, 'oldArray');
-    } catch (error) {
-      // Error saving data
-      console.log(error);
-    }
-  };
+  ]; 
 
   return (
     <>
@@ -120,6 +80,7 @@ const App = () => {
                 color: '#da5a5d',
                 fontSize: 35,
                 fontWeight: 'bold',
+                fontFamily: 'tahoma',
               }}>
               {appName}
             </Text>
@@ -134,10 +95,23 @@ const App = () => {
 
         <View style={{ flex: 1, backgroundColor: '#eaeafa' }}>
           <GestureRecognizer
-            onSwipeLeft={() => _storeData()}
-            onSwipeRight={() => _callApi()}
-            onTouchStart={() => {
-              setCount(count + 1);
+            onSwipeLeft={() => {
+              storeData(user);
+              setUser(undefined);
+              setSelectedItem(0);
+              callApi((newUser:UserModelClass) => {
+                setUser(newUser);
+              });
+            }}
+            onSwipeRight={() => {
+              setUser(undefined);
+              setSelectedItem(0);
+              callApi((newUser:UserModelClass) => {
+                setUser(newUser);
+              });
+            }}
+            onTouchEnd={() => {
+              setCountHeart(countHeart + 1);
             }}>
             <Image
               style={{
@@ -147,7 +121,7 @@ const App = () => {
                 alignSelf: 'center',
                 borderRadius: 10,
               }}
-              resizeMode="contain"
+              resizeMode="stretch"
               source={{
                 uri:
                   user === undefined
@@ -155,7 +129,7 @@ const App = () => {
                     : user.results[0].user.picture,
               }}
             />
-            <FloatingHearts count={count} color='pink' />
+            <FloatingHearts count={countHeart} />
           </GestureRecognizer>
 
           <View style={{ alignItems: 'center', marginTop: 35 }}>
@@ -184,25 +158,6 @@ const App = () => {
       </SafeAreaView>
     </>
   );
-
-  // Example POST method implementation:
-  async function postData(url = '', data = {}) {
-    // Default options are marked with *
-    const response = await fetch(url, {
-      method: 'GET', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      // body: JSON.stringify(data), // body data type must match "Content-Type" header
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
-  }
 };
 
 const styles = StyleSheet.create({});

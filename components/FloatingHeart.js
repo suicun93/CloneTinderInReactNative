@@ -85,7 +85,7 @@ class FloatingHearts extends Component {
 }
 
 FloatingHearts.propTypes = {
-  style: PropTypes.object,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   count: PropTypes.number,
   color: PropTypes.string,
   renderCustomShape: PropTypes.func,
