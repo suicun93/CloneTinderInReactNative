@@ -8,8 +8,8 @@ interface MyIconProps {
   selected: boolean;
 }
 
-const selectedColor = 'red';
-const disSelectedColor = '#bfbfbf';
+const selectedColor =  '#d3766f';
+const disSelectedColor = 'rgba(255,255,255,0.7)';
 
 export const MyIcon: React.FunctionComponent<MyIconProps> = ({
   name = 'event',

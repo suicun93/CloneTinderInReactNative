@@ -7,7 +7,7 @@ import { Image } from 'react-native'
  */
 
 const HeartShape = ({ color }) => {
-  return <Image source={require('../assets/heart.png')} style={{ tintColor: color }} />
+  return <Image source={require('../images/heart.png')} style={{ tintColor: color }} />
 }
 
 HeartShape.propTypes = {
