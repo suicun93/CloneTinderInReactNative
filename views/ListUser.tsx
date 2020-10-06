@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, Image, FlatList } from 'react-native';
 
 // Models
@@ -12,7 +12,6 @@ interface ListUserProps {
   setLoaded: (loaded: boolean) => void;
 }
 const UserItem = ({ user }: { user: User }) => (
-  console.log(user),
   <View
     style={{
       flexDirection: 'row',
@@ -64,13 +63,14 @@ export const ListUser: React.FunctionComponent<ListUserProps> = (
 ) => {
   const [listUser, setListUser] = useState(new Array<User>());
 
-  if (!listUserProps.loaded) {
-    restoreData().then((listUserOut: User[]) => {
-      // console.log(listUser.length, 'listUser');
-      listUserProps.setLoaded(true);
-      setListUser(listUserOut);
-    });
-  }
+  useEffect(() => {
+    if (!listUserProps.loaded) {
+      restoreData().then((listUserOut: User[]) => {
+        listUserProps.setLoaded(true);
+        setListUser(listUserOut);
+      });
+    }
+  });
 
   return listUser.length !== 0 ? (
     <FlatList
@@ -80,22 +80,22 @@ export const ListUser: React.FunctionComponent<ListUserProps> = (
         backgroundColor: '#9ad9ea',
       }}
       data={listUser}
-      renderItem={({ item }) =>
-        <UserItem item={item} />
-      }
+      renderItem={({ item }) => {
+        return <UserItem user={item} />;
+      }}
       keyExtractor={(item) => item.id}
     />
   ) : (
-      <Text
-        style={{
-          marginHorizontal: 17,
-          marginVertical: 15,
-          textAlign: 'center',
-          fontSize: 25,
-          fontWeight: '500',
-          backgroundColor: '#9ad9ea',
-        }}>
-        List is empty
-      </Text>
-    );
+    <Text
+      style={{
+        marginHorizontal: 17,
+        marginVertical: 15,
+        textAlign: 'center',
+        fontSize: 25,
+        fontWeight: '500',
+        backgroundColor: '#9ad9ea',
+      }}>
+      List is empty
+    </Text>
+  );
 };

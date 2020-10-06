@@ -9,7 +9,7 @@ interface MyIconProps {
 }
 
 const selectedColor =  '#d3766f';
-const disSelectedColor = 'rgba(255,255,255,0.7)';
+const disSelectedColor = 'rgba(255,255,255,0.6)';
 
 export const MyIcon: React.FunctionComponent<MyIconProps> = ({
   name = 'event',

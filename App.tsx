@@ -25,7 +25,7 @@ const App = () => {
         <View style={{ flexDirection: 'row', backgroundColor: '#efe3af' }}>
           <Icon
             name="home"
-            color={view === 'homeScreen' ? '#d3766f' : 'rgba(255,255,255,0.7)'}
+            color={view === 'homeScreen' ? '#23b5be' : 'rgba(255,255,255,0.8)'}
             containerStyle={{ padding: 10 }}
             size={40}
             onPress={() => {
@@ -46,7 +46,7 @@ const App = () => {
           </View>
           <Icon
             name="book"
-            color={view === 'listUser' ? '#d3766f' : 'rgba(255,255,255,0.7)'}
+            color={view === 'listUser' ? '#23b5be' : 'rgba(255,255,255,0.7)'}
             containerStyle={{ padding: 10 }}
             size={40}
             onPress={() => {

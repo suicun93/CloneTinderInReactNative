@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Text, View, Image } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  Animated, // add this
+  Easing, // add this
+  Dimensions,
+  PanResponder,
+} from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
 // Models
-import UserModelClass from '../models/UserClass';
+import { UserModel } from '../models/UserModel';
 import { MyData, collectDataFromUser } from '../models/MyData';
 
 // Components
@@ -12,11 +20,13 @@ import FloatingHearts from '../components/FloatingHeart';
 import { storeData } from '../common/Storage';
 import { callApi } from '../common/Network';
 import avatar from '../images/avatar.png';
-
-interface ListUserProps {
-  loaded: boolean;
-  setLoaded: (loaded: boolean) => void;
-}
+// Xoay, Rotate
+var position = new Animated.ValueXY();
+let [translateX, translateY] = [position.x, position.y];
+const rotate = translateX.interpolate({
+  inputRange: [0, 100, 200],
+  outputRange: ['0deg', '7deg', '15deg'],
+});
 
 export const HomeScreen: React.FunctionComponent = () => {
   const [user, setUser] = useState();
@@ -25,26 +35,42 @@ export const HomeScreen: React.FunctionComponent = () => {
   const avatarImageUri = Image.resolveAssetSource(avatar).uri;
 
   const listData = collectDataFromUser(user);
+
+  const getNewUser = (direction: 'left' | 'right') => {
+    if (direction === 'right') {
+      storeData(user);
+    }
+    setUser(undefined);
+    setSelectedItem(0);
+    callApi((newUser: UserModel) => {
+      setUser(newUser);
+    });
+  };
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: (evt, gestureState) => true,
+    onPanResponderMove: (evt, gestureState) => {
+      position.setValue({ x: gestureState.dx, y: gestureState.dy });
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      position.setValue({ x: 0, y: 0 });
+      if (Math.abs(gestureState.dx) < 100) {
+        setCountHeart(countHeart + 1);
+      } else {
+        getNewUser(gestureState.dx < 0 ? 'left' : 'right');
+      }
+    },
+  });
   return (
     <View style={{ flex: 1, backgroundColor: '#9ad9ea' }}>
-      <GestureRecognizer
-        onSwipeLeft={() => {
-          storeData(user);
-          setUser(undefined);
-          setSelectedItem(0);
-          callApi((newUser: UserModelClass) => {
-            setUser(newUser);
-          });
-        }}
-        onSwipeRight={() => {
-          setUser(undefined);
-          setSelectedItem(0);
-          callApi((newUser: UserModelClass) => {
-            setUser(newUser);
-          });
-        }}
-        onTouchEnd={() => {
-          setCountHeart(countHeart + 1);
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={{
+          transform: [
+            { translateX: position.x },
+            { translateY: position.y },
+            { rotate },
+          ],
         }}>
         <Image
           style={{
@@ -53,6 +79,8 @@ export const HomeScreen: React.FunctionComponent = () => {
             width: '90%',
             alignSelf: 'center',
             borderRadius: 10,
+            borderColor: '#23b5be',
+            borderWidth: 3,
           }}
           resizeMode="stretch"
           source={{
@@ -63,7 +91,7 @@ export const HomeScreen: React.FunctionComponent = () => {
           }}
         />
         <FloatingHearts count={countHeart} />
-      </GestureRecognizer>
+      </Animated.View>
 
       <View style={{ alignItems: 'center', marginTop: 35 }}>
         <Text style={{ fontSize: 18, color: '#da5a5d' }}>

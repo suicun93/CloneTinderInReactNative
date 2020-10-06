@@ -1,10 +1,11 @@
-import UserModelClass from '../models/UserClass';
+import { UserModel } from '../models/UserModel';
 import { apiUrl } from '../constants';
-export const callApi = async (changeUser: (newUser: UserModelClass) => void) => {
+export const callApi = async (changeUser: (newUser: UserModel) => void) => {
   console.log('callApi');
   postData(apiUrl)
     .then((user) => {
-      const userModel = Object.assign(new UserModelClass(), user);
+      console.log(user, 'response');
+      const userModel: UserModel = user;
       changeUser(userModel);
     })
     .catch((error) => {
