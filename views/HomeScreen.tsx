@@ -1,51 +1,76 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
   Image,
   Animated, // add this
-  Easing, // add this
   Dimensions,
   PanResponder,
+  StyleSheet,
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
-
-// Models
-import { UserModel } from '../models/UserModel';
-import { MyData, collectDataFromUser } from '../models/MyData';
 
 // Components
 import { MyList } from '../components/MyList';
 import FloatingHearts from '../components/FloatingHeart';
-import { storeData } from '../common/Storage';
-import { callApi } from '../common/Network';
 import avatar from '../images/avatar.png';
+
+// Controller
+import { useHomeScreenController } from '../presenters/HomeController';
+
 // Xoay, Rotate
+const detectPoint = 150;
 var position = new Animated.ValueXY();
 let [translateX, translateY] = [position.x, position.y];
 const rotate = translateX.interpolate({
-  inputRange: [0, 100, 200],
-  outputRange: ['0deg', '7deg', '15deg'],
+  inputRange: [0, detectPoint / 2, detectPoint],
+  outputRange: ['0deg', '10deg', '18deg'],
+});
+var backgroundColorLike = translateX.interpolate({
+  inputRange: [0, detectPoint / 2, detectPoint * 2],
+  outputRange: [
+    'rgba(1, 1, 1, 0.0)',
+    'rgba(255, 255, 255, 0.5)',
+    'rgba(255, 255, 255, 0.5)',
+  ],
+});
+var backgroundColorUnlike = translateX.interpolate({
+  inputRange: [-detectPoint * 2, -detectPoint / 2, 0],
+  outputRange: [
+    'rgba(255, 255, 255, 0.5)',
+    'rgba(255, 255, 255, 0.5)',
+    'rgba(1, 1, 1, 0.0)',
+  ],
+});
+
+var textLike = translateX.interpolate({
+  inputRange: [0, detectPoint / 2, detectPoint * 2],
+  outputRange: [
+    'rgba(1, 1, 1, 0)',
+    'rgba(94, 224, 152, 0.8)',
+    'rgba(94, 224, 152, 1)',
+  ],
+});
+
+var textUnLike = translateX.interpolate({
+  inputRange: [-detectPoint * 2, -detectPoint / 2, 0],
+  outputRange: [
+    'rgba(250, 111, 105, 1)',
+    'rgba(250, 111, 105, 0.8)',
+    'rgba(1, 1, 1, 0)',
+  ],
 });
 
 export const HomeScreen: React.FunctionComponent = () => {
-  const [user, setUser] = useState();
-  const [selectedItem, setSelectedItem] = useState(0);
-  const [countHeart, setCountHeart] = useState(0);
   const avatarImageUri = Image.resolveAssetSource(avatar).uri;
-
-  const listData = collectDataFromUser(user);
-
-  const getNewUser = (direction: 'left' | 'right') => {
-    if (direction === 'right') {
-      storeData(user);
-    }
-    setUser(undefined);
-    setSelectedItem(0);
-    callApi((newUser: UserModel) => {
-      setUser(newUser);
-    });
-  };
+  const [countHeart, setCountHeart] = useState(0);
+  const {
+    user,
+    selectedItem,
+    swipe,
+    setSelectedItem,
+    listData,
+  } = useHomeScreenController();
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -54,42 +79,92 @@ export const HomeScreen: React.FunctionComponent = () => {
     },
     onPanResponderRelease: (evt, gestureState) => {
       position.setValue({ x: 0, y: 0 });
-      if (Math.abs(gestureState.dx) < 100) {
+
+      if (Math.abs(gestureState.dx) < detectPoint) {
         setCountHeart(countHeart + 1);
       } else {
-        getNewUser(gestureState.dx < 0 ? 'left' : 'right');
+        swipe(gestureState.dx < 0 ? 'left' : 'right');
       }
     },
   });
+
+  React.useEffect(() => {
+    swipe('left');
+  }, []);
   return (
     <View style={{ flex: 1, backgroundColor: '#9ad9ea' }}>
       <Animated.View
         {...panResponder.panHandlers}
-        style={{
-          transform: [
-            { translateX: position.x },
-            { translateY: position.y },
-            { rotate },
-          ],
-        }}>
+        style={[
+          {
+            transform: [
+              { translateX: position.x },
+              { translateY: position.y },
+              { rotate },
+            ],
+          },
+        ]}>
         <Image
-          style={{
-            margin: 20,
-            aspectRatio: 1,
-            width: '90%',
-            alignSelf: 'center',
-            borderRadius: 10,
-            borderColor: '#23b5be',
-            borderWidth: 3,
-          }}
-          resizeMode="stretch"
           source={{
             uri:
               user === undefined
                 ? avatarImageUri
                 : user.results[0].user.picture,
           }}
+          style={{
+            borderRadius: 10,
+            borderColor: '#23b5be',
+            borderWidth: 3,
+            margin: 20,
+            aspectRatio: 1,
+            width: '90%',
+          }}
+          resizeMode="cover"
         />
+        <Animated.View
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Animated.View
+            style={{
+              backgroundColor: backgroundColorLike,
+              borderRadius: 10,
+              borderColor: textLike,
+              borderWidth: 7,
+              paddingHorizontal: 15,
+              marginTop: 100,
+              transform: [{ rotate: '15deg' }],
+            }}>
+            <Animated.Text
+              style={{ color: textLike, fontSize: 80, fontWeight: 'bold' }}>
+              Like
+            </Animated.Text>
+          </Animated.View>
+        </Animated.View>
+        <Animated.View
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Animated.View
+            style={{
+              backgroundColor: backgroundColorUnlike,
+              borderRadius: 10,
+              borderColor: textUnLike,
+              borderWidth: 7,
+              paddingHorizontal: 10,
+              marginTop: 100,
+              transform: [{ rotate: '-15deg' }],
+            }}>
+            <Animated.Text
+              style={{ color: textUnLike, fontSize: 80, fontWeight: 'bold' }}>
+              Unlike
+            </Animated.Text>
+          </Animated.View>
+        </Animated.View>
         <FloatingHearts count={countHeart} />
       </Animated.View>
 

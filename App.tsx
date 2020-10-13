@@ -55,16 +55,7 @@ const App = () => {
             }}
           />
         </View>
-        {view === 'homeScreen' ? (
-          <HomeScreen />
-        ) : (
-          <ListUser
-            loaded={loaded}
-            setLoaded={(load: boolean) => {
-              setLoaded(load);
-            }}
-          />
-        )}
+        {view === 'homeScreen' ? <HomeScreen /> : <ListUser />}
       </SafeAreaView>
     </>
   );

@@ -1,17 +1,5 @@
 import { UserModel } from '../models/UserModel';
 import { apiUrl } from '../constants';
-export const callApi = async (changeUser: (newUser: UserModel) => void) => {
-  console.log('callApi');
-  postData(apiUrl)
-    .then((user) => {
-      console.log(user, 'response');
-      const userModel: UserModel = user;
-      changeUser(userModel);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
 
 // Example GET method implementation:
 async function postData(url = '', data = {}) {
@@ -30,4 +18,14 @@ async function postData(url = '', data = {}) {
     // body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
   return response.json(); // parses JSON response into native JavaScript objects
+}
+
+export class Network {
+  constructor() {}
+  getUser = async (): Promise<UserModel> => {
+    console.log('callApi');
+    const user = await postData(apiUrl);
+    console.log(user, 'response');
+    return user;
+  };
 }

@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text, View, Image, FlatList } from 'react-native';
 
 // Models
 import { User } from '../models/UserModel';
 
 // Components
-import { restoreData } from '../common/Storage';
+import { useListUserController } from '../presenters/ListUserController';
 
-interface ListUserProps {
-  loaded: boolean;
-  setLoaded: (loaded: boolean) => void;
-}
 const UserItem = ({ user }: { user: User }) => (
   <View
     style={{
@@ -58,25 +54,19 @@ const UserItem = ({ user }: { user: User }) => (
     </View>
   </View>
 );
-export const ListUser: React.FunctionComponent<ListUserProps> = (
-  listUserProps: ListUserProps
-) => {
-  const [listUser, setListUser] = useState(new Array<User>());
+export const ListUser: React.FunctionComponent = () => {
+  const [listUser, loadUser] = useListUserController();
 
-  useEffect(() => {
-    if (!listUserProps.loaded) {
-      restoreData().then((listUserOut: User[]) => {
-        listUserProps.setLoaded(true);
-        setListUser(listUserOut);
-      });
-    }
-  });
+  React.useEffect(() => {
+    loadUser();
+  }, [loadUser]);
 
   return listUser.length !== 0 ? (
     <FlatList
-      style={{
-        paddingHorizontal: 13,
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={{
         paddingVertical: 10,
+        paddingHorizontal: 13,
         backgroundColor: '#9ad9ea',
       }}
       data={listUser}
