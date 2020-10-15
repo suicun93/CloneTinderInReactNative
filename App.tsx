@@ -1,61 +1,60 @@
-import React, { useState } from 'react';
+import React from "react";
 import {
   StatusBar,
   SafeAreaView,
   Text,
   View,
-  StyleSheet,
-  Image,
-} from 'react-native';
-import { Icon } from 'react-native-elements';
-import { HomeScreen } from './views/HomeScreen';
-import { ListUser } from './views/ListUser';
+} from "react-native";
+import { Icon } from "react-native-elements";
+import { HomeScreen } from "./views/HomeScreen";
+import { ListUser } from "./views/ListUser";
 
 // Components
-import { appName } from './constants';
+import { appName } from "./constants";
 
 // Main App
 const App = () => {
-  const [view, setView] = useState('homeScreen');
-  const [loaded, setLoaded] = useState(false);
+  const [view, setView] = React.useState("homeScreen");
+  const [loaded, setLoaded] = React.useState(false);
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#efe3af' }}>
-        <View style={{ flexDirection: 'row', backgroundColor: '#efe3af' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#efe3af" }}>
+        <View style={{ flexDirection: "row", backgroundColor: "#efe3af" }}>
           <Icon
             name="home"
-            color={view === 'homeScreen' ? '#23b5be' : 'rgba(255,255,255,0.8)'}
+            color={view === "homeScreen" ? "#23b5be" : "rgba(255,255,255,0.8)"}
             containerStyle={{ padding: 10 }}
             size={40}
             onPress={() => {
               setLoaded(true);
-              setView('homeScreen');
+              setView("homeScreen");
             }}
           />
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={{ flex: 1, justifyContent: "center" }}>
             <Text
               style={{
-                textAlign: 'center',
-                color: '#da5a5d',
+                textAlign: "center",
+                color: "#da5a5d",
                 fontSize: 35,
-                fontWeight: 'bold',
-              }}>
+                fontWeight: "bold",
+              }}
+            >
               {appName}
             </Text>
           </View>
           <Icon
             name="book"
-            color={view === 'listUser' ? '#23b5be' : 'rgba(255,255,255,0.7)'}
+            color={view === "listUser" ? "#23b5be" : "rgba(255,255,255,0.7)"}
             containerStyle={{ padding: 10 }}
             size={40}
             onPress={() => {
               setLoaded(false);
-              setView('listUser');
+              setView("listUser");
             }}
           />
         </View>
-        {view === 'homeScreen' ? <HomeScreen /> : <ListUser />}
+        {view === "homeScreen" ? <HomeScreen /> : <ListUser />}
       </SafeAreaView>
     </>
   );

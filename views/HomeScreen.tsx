@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
   Image,
-  Animated, // add this
-  Dimensions,
+  Animated,
   PanResponder,
   StyleSheet,
-} from 'react-native';
-import GestureRecognizer from 'react-native-swipe-gestures';
+} from "react-native";
+import GestureRecognizer from "react-native-swipe-gestures";
 
 // Components
-import { MyList } from '../components/MyList';
-import FloatingHearts from '../components/FloatingHeart';
-import avatar from '../images/avatar.png';
+import { MyList } from "../components/MyList";
+import FloatingHearts from "../components/FloatingHeart";
+const avatar =  require("../images/avatar.png");
 
 // Controller
-import { useHomeScreenController } from '../presenters/HomeController';
+import { useHomeScreenController } from "../presenters/HomeController";
 
 // Xoay, Rotate
 const detectPoint = 150;
@@ -24,40 +23,38 @@ var position = new Animated.ValueXY();
 let [translateX, translateY] = [position.x, position.y];
 const rotate = translateX.interpolate({
   inputRange: [0, detectPoint / 2, detectPoint],
-  outputRange: ['0deg', '10deg', '18deg'],
+  outputRange: ["0deg", "10deg", "18deg"],
 });
 var backgroundColorLike = translateX.interpolate({
   inputRange: [0, detectPoint / 2, detectPoint * 2],
   outputRange: [
-    'rgba(1, 1, 1, 0.0)',
-    'rgba(255, 255, 255, 0.5)',
-    'rgba(255, 255, 255, 0.5)',
+    "rgba(1, 1, 1, 0.0)",
+    "rgba(255, 255, 255, 0.5)",
+    "rgba(255, 255, 255, 0.5)",
   ],
 });
 var backgroundColorUnlike = translateX.interpolate({
   inputRange: [-detectPoint * 2, -detectPoint / 2, 0],
   outputRange: [
-    'rgba(255, 255, 255, 0.5)',
-    'rgba(255, 255, 255, 0.5)',
-    'rgba(1, 1, 1, 0.0)',
+    "rgba(255, 255, 255, 0.5)",
+    "rgba(255, 255, 255, 0.5)",
+    "rgba(1, 1, 1, 0.0)",
   ],
 });
-
 var textLike = translateX.interpolate({
   inputRange: [0, detectPoint / 2, detectPoint * 2],
   outputRange: [
-    'rgba(1, 1, 1, 0)',
-    'rgba(94, 224, 152, 0.8)',
-    'rgba(94, 224, 152, 1)',
+    "rgba(1, 1, 1, 0)",
+    "rgba(94, 224, 152, 0.8)",
+    "rgba(94, 224, 152, 1)",
   ],
 });
-
 var textUnLike = translateX.interpolate({
   inputRange: [-detectPoint * 2, -detectPoint / 2, 0],
   outputRange: [
-    'rgba(250, 111, 105, 1)',
-    'rgba(250, 111, 105, 0.8)',
-    'rgba(1, 1, 1, 0)',
+    "rgba(250, 111, 105, 1)",
+    "rgba(250, 111, 105, 0.8)",
+    "rgba(1, 1, 1, 0)",
   ],
 });
 
@@ -83,16 +80,16 @@ export const HomeScreen: React.FunctionComponent = () => {
       if (Math.abs(gestureState.dx) < detectPoint) {
         setCountHeart(countHeart + 1);
       } else {
-        swipe(gestureState.dx < 0 ? 'left' : 'right');
+        swipe(gestureState.dx < 0 ? "left" : "right");
       }
     },
   });
 
   React.useEffect(() => {
-    swipe('left');
+    swipe("left");
   }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: '#9ad9ea' }}>
+    <View style={{ flex: 1, backgroundColor: "#9ad9ea" }}>
       <Animated.View
         {...panResponder.panHandlers}
         style={[
@@ -103,7 +100,8 @@ export const HomeScreen: React.FunctionComponent = () => {
               { rotate },
             ],
           },
-        ]}>
+        ]}
+      >
         <Image
           source={{
             uri:
@@ -113,20 +111,21 @@ export const HomeScreen: React.FunctionComponent = () => {
           }}
           style={{
             borderRadius: 10,
-            borderColor: '#23b5be',
+            borderColor: "#23b5be",
             borderWidth: 3,
             margin: 20,
             aspectRatio: 1,
-            width: '90%',
+            width: "90%",
           }}
           resizeMode="cover"
         />
         <Animated.View
           style={{
             ...StyleSheet.absoluteFillObject,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Animated.View
             style={{
               backgroundColor: backgroundColorLike,
@@ -135,10 +134,12 @@ export const HomeScreen: React.FunctionComponent = () => {
               borderWidth: 7,
               paddingHorizontal: 15,
               marginTop: 100,
-              transform: [{ rotate: '15deg' }],
-            }}>
+              transform: [{ rotate: "15deg" }],
+            }}
+          >
             <Animated.Text
-              style={{ color: textLike, fontSize: 80, fontWeight: 'bold' }}>
+              style={{ color: textLike, fontSize: 80, fontWeight: "bold" }}
+            >
               Like
             </Animated.Text>
           </Animated.View>
@@ -146,9 +147,10 @@ export const HomeScreen: React.FunctionComponent = () => {
         <Animated.View
           style={{
             ...StyleSheet.absoluteFillObject,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Animated.View
             style={{
               backgroundColor: backgroundColorUnlike,
@@ -157,10 +159,12 @@ export const HomeScreen: React.FunctionComponent = () => {
               borderWidth: 7,
               paddingHorizontal: 10,
               marginTop: 100,
-              transform: [{ rotate: '-15deg' }],
-            }}>
+              transform: [{ rotate: "-15deg" }],
+            }}
+          >
             <Animated.Text
-              style={{ color: textUnLike, fontSize: 80, fontWeight: 'bold' }}>
+              style={{ color: textUnLike, fontSize: 80, fontWeight: "bold" }}
+            >
               Unlike
             </Animated.Text>
           </Animated.View>
@@ -168,17 +172,18 @@ export const HomeScreen: React.FunctionComponent = () => {
         <FloatingHearts count={countHeart} />
       </Animated.View>
 
-      <View style={{ alignItems: 'center', marginTop: 35 }}>
-        <Text style={{ fontSize: 18, color: '#da5a5d' }}>
+      <View style={{ alignItems: "center", marginTop: 35 }}>
+        <Text style={{ fontSize: 18, color: "#da5a5d" }}>
           {listData[selectedItem].title}
         </Text>
         <Text
           style={{
             fontSize: 35,
             marginVertical: 10,
-            fontWeight: '700',
-            color: '#da5a5d',
-          }}>
+            fontWeight: "700",
+            color: "#da5a5d",
+          }}
+        >
           {listData[selectedItem].data}
         </Text>
       </View>
@@ -187,9 +192,10 @@ export const HomeScreen: React.FunctionComponent = () => {
         style={{
           marginTop: 50,
           height: 50,
-          flexDirection: 'row',
-          justifyContent: 'center',
-        }}>
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
         <MyList
           selectedItem={selectedItem}
           onClick={(select: number) => {

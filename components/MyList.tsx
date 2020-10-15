@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MyIcon } from './MyIcon';
+import React from "react";
+import { MyIcon } from "./MyIcon";
 
 interface MyListProps {
   onClick: (select: number) => void;
@@ -7,11 +7,11 @@ interface MyListProps {
 }
 
 const ListName: Array<string> = [
-  'account-circle',
-  'mail',
-  'place',
-  'phone-in-talk',
-  'save',
+  "account-circle",
+  "mail",
+  "place",
+  "phone-in-talk",
+  "save",
 ];
 
 export const MyList: React.FunctionComponent<MyListProps> = ({

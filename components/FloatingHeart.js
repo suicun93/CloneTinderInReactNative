@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { View, Animated, StyleSheet, ViewPropTypes } from 'react-native';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { View, Animated, StyleSheet, ViewPropTypes } from "react-native";
 
-import HeartShape from './HeartShape';
+import HeartShape from "./HeartShape";
 
 /**
  * @class FloatingHearts
@@ -64,14 +64,16 @@ class FloatingHearts extends Component {
       <View
         style={[styles.container, this.props.style]}
         onLayout={this.handleOnLayout}
-        pointerEvents="none">
+        pointerEvents="none"
+      >
         {isReady &&
           this.state.hearts.map(({ id, right }) => (
             <AnimatedShape
               key={id}
               height={height}
               style={{ right }}
-              onComplete={this.removeHeart.bind(this, id)}>
+              onComplete={this.removeHeart.bind(this, id)}
+            >
               {renderCustomShape ? (
                 renderCustomShape(id)
               ) : (
@@ -168,7 +170,7 @@ class AnimatedShape extends Component {
 
     this.rotateAnimation = this.yAnimation.interpolate({
       inputRange: [0, height / 4, height / 3, height / 2, height],
-      outputRange: ['0deg', '-2deg', '0deg', '2deg', '0deg'],
+      outputRange: ["0deg", "-2deg", "0deg", "2deg", "0deg"],
     });
 
     setTimeout(() => this.setState({ animationsReady: true }), 16);
@@ -182,7 +184,8 @@ class AnimatedShape extends Component {
           this.getAnimationStyle(),
           this.props.style,
         ]}
-        onLayout={this.handleOnLayout}>
+        onLayout={this.handleOnLayout}
+      >
         {this.props.children}
       </Animated.View>
     );
@@ -210,13 +213,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    position: 'absolute',
+    position: "absolute",
   },
 
   shapeWrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
 });
 

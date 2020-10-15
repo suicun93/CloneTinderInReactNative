@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { UserModel } from '../models/UserModel';
-import { UserServiceImpl } from '../useCases/UserUseCase';
-import { UserRepositoryImpl } from '../repositories/UserRepository';
-import { MyData, collectDataFromUser } from '../models/MyData';
+import React, { useState } from "react";
+import { UserServiceImpl } from "../useCases/UserUseCase";
+import { UserRepositoryImpl } from "../repositories/UserRepository";
+import { collectDataFromUser } from "../models/MyData";
 
 var userRepositoryImpl = new UserRepositoryImpl();
 var userUseCase = new UserServiceImpl(userRepositoryImpl);
@@ -13,10 +12,10 @@ export function useHomeScreenController() {
   const listData = collectDataFromUser(user);
 
   const swipe = React.useCallback(
-    async (direction: 'right' | 'left') => {
+    async (direction: "right" | "left") => {
       try {
-        if (direction === 'right') {
-          console.log(user, 'controller');
+        if (direction === "right") {
+          console.log(user, "controller");
           userUseCase.saveUserToLocalStorage(user.results[0].user);
         }
         setUser(undefined);

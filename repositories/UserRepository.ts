@@ -1,6 +1,6 @@
-import { User, UserModel } from '../models/UserModel';
-import { Storage } from '../common/Storage';
-import { Network } from '../common/Network';
+import { User, UserModel } from "../models/UserModel";
+import { Storage } from "../common/Storage";
+import { Network } from "../common/Network";
 export interface UserRepository {
   getUserFromLocalStorage: () => Promise<User[] | undefined>;
   saveUserToLocalStorage: (user: User) => Promise<void>;
@@ -22,7 +22,7 @@ export class UserRepositoryImpl implements UserRepository {
   }
   async getUserFromAPI(): Promise<UserModel> {
     const user = await this.network.getUser();
-    console.log(user,'repository');
+    console.log(user, "repository");
     return user;
   }
 }
