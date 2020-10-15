@@ -1,0 +1,6 @@
+module Pods_CloneTinderInReactNative_CloneTinderInReactNativeTests {
+  umbrella header "Pods-CloneTinderInReactNative-CloneTinderInReactNativeTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

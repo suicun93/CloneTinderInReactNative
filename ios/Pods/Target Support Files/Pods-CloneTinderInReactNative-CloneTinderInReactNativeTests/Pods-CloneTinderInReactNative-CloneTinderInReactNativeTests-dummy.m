@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_CloneTinderInReactNative_CloneTinderInReactNativeTests : NSObject
+@end
+@implementation PodsDummy_Pods_CloneTinderInReactNative_CloneTinderInReactNativeTests
+@end
